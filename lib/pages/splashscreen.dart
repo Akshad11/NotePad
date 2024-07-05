@@ -1,4 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:noteapp/pages/components/togglebutton.dart';
+import 'package:noteapp/pages/homepage.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -9,7 +13,27 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Timer(Duration(seconds: 2), () {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(
+          builder: (Context) => Homepage()
+      )
+      );
+    });
+  }
+
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(
+      body: Center(
+        child: Container(
+          width: 300,
+          height: 300,
+          child: Image.asset('assets/images/splashIcon.png'),
+        ),
+      ),
+    );
   }
 }
