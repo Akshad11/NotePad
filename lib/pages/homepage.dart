@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:noteapp/pages/components/togglebutton.dart';
+import 'package:noteapp/pages/notepage.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -120,20 +121,26 @@ class _HomepageState extends State<Homepage> {
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Container(
-              width: double.infinity,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Task 1',
-                  style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.w600
-                  ),
-                  ),
-                  Icon(Icons.star,
-                  color: Colors.yellow,)
-                ],
+            child: InkWell(
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(
+                    builder: (context) => NotePage() ));
+              },
+              child: Container(
+                width: double.infinity,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Task 1',
+                    style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.w600
+                    ),
+                    ),
+                    Icon(Icons.star,
+                    color: Colors.yellow,)
+                  ],
+                ),
               ),
             ),
           ),

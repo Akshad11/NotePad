@@ -10,6 +10,28 @@ class NotePage extends StatefulWidget {
 class _NotePageState extends State<NotePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(
+        backgroundColor: Colors.cyan,
+        appBar: AppBar(
+        toolbarHeight: 100,
+        title: Text('Notepad',
+        style: TextStyle(
+        fontFamily: 'Achico',
+        fontSize: 40,
+        // fontWeight: FontWeight.bold,
+
+    ),
+    ),
+      ),
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        child: Text(
+          'Type here ',
+        ),
+        color: Colors.grey,
+      ),
+
+    );
   }
 }
