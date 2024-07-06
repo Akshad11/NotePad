@@ -26,10 +26,27 @@ class _NotePageState extends State<NotePage> {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        child: Text(
-          'Type here ',
+        color : Colors.cyan,
+        child: Container(
+          width: double.infinity,
+          height: double.infinity,
+          child: Column(
+            children: [
+              Container(
+                width: double.infinity,
+                height: 100,
+                color: Colors.brown,
+                child: Text(
+                  'Type here ',
+                ),
+              ),
+              Container(
+                width: double.infinity,
+                color: Colors.blueAccent,
+              )
+            ],
+          ),
         ),
-        color: Colors.grey,
       ),
 
     );
