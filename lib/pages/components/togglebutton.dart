@@ -60,7 +60,7 @@ State<CrazySwitch> with
           height: 30,
           padding: EdgeInsets.fromLTRB(0, 6, 0, 6),
           decoration: BoxDecoration(
-              color: isChecked ? Colors.white : Colors.black,
+              color: isChecked ? Colors.white54 : Colors.black,
               borderRadius: BorderRadius.all(
                 Radius.circular(40),
               ),
