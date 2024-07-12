@@ -2,7 +2,9 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:noteapp/pages/components/datamodel.dart';
 import 'package:noteapp/pages/notepage.dart';
+import 'package:provider/provider.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -11,6 +13,8 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
+
+  //Color for dark and light mode --
   final List<Color> lightColors  = [
     Colors.black,
     Colors.red.shade100,
@@ -18,16 +22,6 @@ class _HomepageState extends State<Homepage> {
     Colors.white,
     Colors.white,
   ];
-  bool isDarkmode = false;
-  Alignment active_Align = Alignment.centerRight;
-
-
-  Color active_text_Color = Colors.black;
-  Color active_imptNotes_Color = Colors.red.shade100;
-  Color active_allNotes_Color = Colors.green.shade100;
-  Color active_appbar_Color = Colors.white;
-  Color active_appbg_Color = Colors.white;
-
   final List<Color> darkColors  = [
     Colors.white,
     Colors.white10,
@@ -36,37 +30,32 @@ class _HomepageState extends State<Homepage> {
     Colors.black,
   ];
 
-  final List<List<String>> impNotesData = [
-    ['Task 1', 'Call Arti for help','T'],
-    ['Task 2', 'Call Arti for help','T'],
-    ['Task 3', 'Call Arti for help','T'],
-    ['Task 4', 'Call Arti for help','T'],
-    ['Task 5', 'Call Arti for help','T'],
-    ['Task 6', 'Call Arti for help','T'],
-    ['Task 7', 'Call Arti for help','T'],
-    ['Task 8', 'Call Arti for help','T'],
-    ['Task 9', 'Call Arti for help','T'],
-    ['Task 10', 'Call Arti for help','T'],
-    ['Task 11', 'Call Arti for help','T'],
-    ['Task 12', 'Call Arti for help','T']
-  ];
-  final List<List<String>> allNotesData = [
-    ['Task 1', 'Call Arti for help','F'],
-    ['Task 2', 'Call Arti for help','F'],
-    ['Task 3', 'Call Arti for help','F'],
-    ['Task 4', 'Call Arti for help','F'],
-    ['Task 5', 'Call Arti for help','F'],
-    ['Task 6', 'Call Arti for help','F'],
-    ['Task 7', 'Call Arti for help','F'],
-    ['Task 8', 'Call Arti for help','F'],
-    ['Task 9', 'Call Arti for help','F'],
-    ['Task 10', 'Call Arti for help','F'],
-    ['Task 11', 'Call Arti for help','F'],
-    ['Task 12', 'Call Arti for help','F']
-  ];
+  //state for dark mode
+  bool isDarkmode = false;
+  Alignment active_Align = Alignment.centerRight;
+  Color active_text_Color = Colors.black;
+  Color active_imptNotes_Color = Colors.red.shade100;
+  Color active_allNotes_Color = Colors.green.shade100;
+  Color active_appbar_Color = Colors.white;
+  Color active_appbg_Color = Colors.white;
+
+  //variables
+  int len = 0;
+
+  final List<String?> allDataApi = ['p','c'];
+
+  // final List<List<String?>> impNotesData = [
+  //
+  //
+  // ];
+  // final List<List<String>?> allNotesData = [
+  //   ['Task 9', 'Call Arti for help','F'],
+  //   ['Task 10', 'Call Arti for help','F'],
+  // ];
 
   @override
   Widget build(BuildContext context) {
+    NotesData myNote = Provider.of<NotesData>(context);
     return Scaffold(
       backgroundColor: active_appbg_Color,
       appBar: AppBar(
@@ -89,114 +78,151 @@ class _HomepageState extends State<Homepage> {
         backgroundColor: active_appbar_Color,
         centerTitle: true,
       ),
-      body: Container(
+      body: allDataApi.isNotEmpty ? Container(
         width: double.infinity,
-        height:double.infinity,
+        height: double.infinity,
         child: Column(
           children: [
+            // Container(
+            //   child: Container(
+            //     width: double.infinity,
+            //     height: 350,
+            //    // color: Colors.grey,
+            //     child:  Column(
+            //       mainAxisAlignment:  MainAxisAlignment.start,
+            //
+            //       children: [
+            //         Container(
+            //           width : double.infinity,
+            //           child: Padding(
+            //             padding: const EdgeInsets.only(left: 20.0),
+            //             child: Text('Important Notes',
+            //             style: TextStyle(
+            //               color: active_text_Color,
+            //               fontSize: 30,
+            //               fontWeight: FontWeight.bold,
+            //             ),
+            //               textAlign: TextAlign.left,
+            //             ),
+            //           ),
+            //         ),
+            //         SizedBox(
+            //           height:  300,
+            //           //color: Colors.red,
+            //           child: GridView.builder(
+            //             padding: EdgeInsets.only(left: 20,top: 30,bottom: 40, right: 20),
+            //             itemBuilder: (context, index) {
+            //             return InkWell(
+            //                 onTap: (){
+            //                   Navigator.push(context,
+            //                   MaterialPageRoute(builder:
+            //                   (context) => NotePage(index))
+            //                   );
+            //                 },
+            //                 child:myNote.allNotesData[index]![2] == 'true' ?
+            //                 ImpoNotes(index,myNote.allNotesData[index]![0],myNote.allNotesData[index]![1]): SizedBox.shrink());
+            //           },
+            //             scrollDirection: Axis.horizontal ,
+            //           itemCount: myNote.allNotesData.length,
+            //             gridDelegate:  SliverGridDelegateWithFixedCrossAxisCount(
+            //             crossAxisCount: 1,
+            //               mainAxisSpacing: 20,
+            //              crossAxisSpacing: 20,
+            //           ),
+            //
+            //           ),
+            //         ),
+            //       ],
+            //     ) ,
+            //   ) ,
+            // ),
             Container(
-              width: double.infinity,
-              height: 350,
-              //color: Colors.grey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Container(
-                    width : double.infinity,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 20.0),
-                      child: Text('Important Notes',
-                      style: TextStyle(
-                        color: active_text_Color,
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                      ),
-                        textAlign: TextAlign.left,
-                      ),
+              child: Container(
+                width: double.infinity,
+                height: 850 ,
+                //color: Colors.greenAccent,
+                child: Column(
+                  children: [
+                    Container(
+                      width : double.infinity,
+                        height: 50,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 20),
+                          child: Text('All Notes',
+                            style: TextStyle(
+                              color: active_text_Color,
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                          ),
+                                          textAlign: TextAlign.left,
+                          ),
+                        )
                     ),
-                  ),
-                  Container(
-                    height:300,
-                    //color: Colors.red,
-                    child: ListView.separated(
-                      padding: EdgeInsets.only(left: 20,top: 30,bottom: 40),
-                      itemBuilder: (context, index) {
-                      return InkWell(
-                          onTap: (){
-                            Navigator.push(context,
-                            MaterialPageRoute(builder:
-                            (context) => NotePage())
+                    Container(
+                      width: double.infinity,
+                      height: 800,
+                      child: GridView.builder(
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: const EdgeInsets.all(20.0),
+                              child: InkWell(
+                                  onTap: (){
+                                    myNote.getTextSubject(myNote.allNotesData[index]![0]);
+                                    myNote.getNoteText(myNote.allNotesData[index]![1]);
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder:
+                                            (context) => NotePage(index))
+                                    );
+                                  },
+                                  child:
+                                  allNotes(index,myNote.allNotesData[index]![0],myNote.allNotesData[index]![1])),
                             );
                           },
-                          child: ImpoNotes(index));
-                    },
-                      separatorBuilder :  (context, _) {
-                        return SizedBox(width: 20,);
-                      },
-                      scrollDirection: Axis.horizontal,
-                    itemCount: impNotesData.length,
-
+                          itemCount: myNote.allNotesData.length,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                        ),
+                         ),
                     ),
-                  ),
-
-                ],
-              ),
+                  ],
+                ),
+                ),
             ),
-            Container(
-              width: double.infinity,
-              height: 470,
-             // color: Colors.greenAccent,
-              child: Column(
-                children: [
-                  Container(
-                    width : double.infinity,
-                      height: 50,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 20),
-                        child: Text('All Notes',
-                          style: TextStyle(
-                            color: active_text_Color,
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
-                        ),
-                                        textAlign: TextAlign.left,
-                        ),
-                      )
-                  ),
-                  Container(
-                    width: double.infinity,
-                    height: 420,
-                    child: GridView.builder(
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: InkWell(
-                                onTap: (){
-                                  Navigator.push(context,
-                                      MaterialPageRoute(builder:
-                                          (context) => NotePage())
-                                  );
-                                },
-                                child: allNotes(index)),
-                          );
-                        },
-                        itemCount: allNotesData.length,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                      ),
-                       ),
-                  ),
-                ],
-              ),
-              ),
           ],
         ),
+      ) : Center(
+        child: Text('Add Notes',
+          style: TextStyle(
+            color: active_text_Color,
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+          ),
+          textAlign: TextAlign.left,
+        ),
       ),
-
+floatingActionButton: FloatingActionButton(
+  onPressed: (){
+    myNote.createNoteId();
+    len = myNote.allNotesData.length + 1;
+    myNote.allNotesData.length = len;
+    myNote.allNotesData[len - 1] = [
+      '','','False'
+    ];
+    myNote.noteclear();
+   Navigator.push(context,
+       MaterialPageRoute(builder:
+           (context) => NotePage(len - 1))
+   );
+  },
+  backgroundColor: Colors.blue,
+  shape: CircleBorder(),
+  child: Icon(Icons.add,
+  ),
+),
     );
   }
 
-  Widget ImpoNotes(index) {
+  Widget ImpoNotes(index,sub,text1) {
     return Container(
       width: 200,
       height: 200,
@@ -215,30 +241,24 @@ class _HomepageState extends State<Homepage> {
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: InkWell(
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(
-                    builder: (context) => NotePage() ));
-              },
-              child: Container(
-                width: double.infinity,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text( impNotesData[index][0],
-                      style: TextStyle(
-                        color: active_text_Color,
-                        fontSize: 25,
-                        fontWeight: FontWeight.w600
-                      ),
-                      ),
+            child: Container(
+              width: double.infinity,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(sub,
+                    style: TextStyle(
+                      color: active_text_Color,
+                      fontSize: 25,
+                      fontWeight: FontWeight.w600
                     ),
-                    Icon(Icons.star,
-                    color: Colors.yellow,)
-                  ],
-                ),
+                    ),
+                  ),
+                  Icon(Icons.star,
+                  color: Colors.yellow,)
+                ],
               ),
             ),
           ),
@@ -246,7 +266,7 @@ class _HomepageState extends State<Homepage> {
             padding: const EdgeInsets.only(left: 15,right: 10),
             child: Container(
               child: Text(
-                impNotesData[index][1],
+                text1,
                 style: TextStyle(
                   color: active_text_Color,
                   fontSize: 20,
@@ -258,7 +278,7 @@ class _HomepageState extends State<Homepage> {
       ),
     );
   }
-  Widget allNotes(index){
+  Widget allNotes(index, sub , text2){
     return Container(
       width: 200,
       height: 200,
@@ -266,7 +286,7 @@ class _HomepageState extends State<Homepage> {
           color: active_allNotes_Color,
           borderRadius: BorderRadius.circular(20),
           boxShadow:[ BoxShadow(
-            color: Color(0x000000).withOpacity(1),
+            color: Colors.black.withOpacity(1),
             offset: Offset(10, 8),
             blurRadius: 30,
             spreadRadius: -10,
@@ -284,7 +304,7 @@ class _HomepageState extends State<Homepage> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text(allNotesData[index][0],
+                    child: Text(sub,
                       style: TextStyle(
                           color: active_text_Color,
                           fontSize: 25,
@@ -302,7 +322,7 @@ class _HomepageState extends State<Homepage> {
             padding: const EdgeInsets.only(left: 15,right: 10),
             child: Container(
               child: Text(
-                allNotesData[index][1],
+                text2,
                 style: TextStyle(
                   color: active_text_Color,
                   fontSize: 20,
@@ -315,8 +335,6 @@ class _HomepageState extends State<Homepage> {
     );
   }
 
-
-
   Widget togglebutton() {
     return InkWell(
       onTap: () {
@@ -325,7 +343,7 @@ class _HomepageState extends State<Homepage> {
         });
       },
       child: Container(
-        width: 80,
+        width: 60,
         height: 30,
         padding: EdgeInsets.only(top: 6, bottom: 6, right: 7, left: 7),
         decoration: BoxDecoration(

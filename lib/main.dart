@@ -1,8 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:noteapp/pages/components/datamodel.dart';
 import 'package:noteapp/pages/splashscreen.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+      MultiProvider(providers:[
+      ChangeNotifierProvider<NotesData>(create :(context){
+        return NotesData();
+      })],
+          child : const MyApp()
+      )
+
+  );
 }
 
 class MyApp extends StatelessWidget {
