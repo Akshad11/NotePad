@@ -1,9 +1,13 @@
 import 'dart:ui';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:noteapp/pages/components/datamodel.dart';
 import 'package:noteapp/pages/notepage.dart';
+import 'package:noteapp/pages/notestore.dart';
 import 'package:provider/provider.dart';
 
 class Homepage extends StatefulWidget {
@@ -38,6 +42,7 @@ class _HomepageState extends State<Homepage> {
   Color active_allNotes_Color = Colors.green.shade100;
   Color active_appbar_Color = Colors.white;
   Color active_appbg_Color = Colors.white;
+  Color active_icon_Color = Colors.white;
 
   //variables
   int len = 0;
@@ -52,6 +57,51 @@ class _HomepageState extends State<Homepage> {
   //   ['Task 9', 'Call Arti for help','F'],
   //   ['Task 10', 'Call Arti for help','F'],
   // ];
+
+  Stream? noteStream;
+
+  getontheload()async{
+    noteStream = await DatabaseMethods().getNoteDetails();
+    setState(() {
+
+    });
+  }
+
+  @override
+  void initState() {
+    getontheload();
+    super.initState();
+  }
+
+  Widget allNotes2(){
+    return StreamBuilder(
+      stream: noteStream,
+      builder: (context, AsyncSnapshot snapshot){
+
+      return snapshot.hasData ? ListView.builder(
+        itemBuilder: (context, index) {
+          DocumentSnapshot ds = snapshot.data.docs[index];
+          return Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: InkWell(
+                onTap: (){
+                //  myNote.getTextSubject(ds["Subject"]);
+                //  myNote.getNoteText("NoteText");
+                  Navigator.push(context,
+                      MaterialPageRoute(builder:
+                          (context) => NotePage(ds["id"],ds["Subject"], ds["NoteText"]))
+                  );
+                },
+                child: allNotes(ds["Subject"], ds["NoteText"],ds["id"])),
+          );
+        },
+        itemCount: snapshot.data.docs.length,
+        // gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        //   crossAxisCount: 2,
+        // ),
+      ) : Container();
+    },);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -161,28 +211,7 @@ class _HomepageState extends State<Homepage> {
                     Container(
                       width: double.infinity,
                       height: 800,
-                      child: GridView.builder(
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: const EdgeInsets.all(20.0),
-                              child: InkWell(
-                                  onTap: (){
-                                    myNote.getTextSubject(myNote.allNotesData[index]![0]);
-                                    myNote.getNoteText(myNote.allNotesData[index]![1]);
-                                    Navigator.push(context,
-                                        MaterialPageRoute(builder:
-                                            (context) => NotePage(index))
-                                    );
-                                  },
-                                  child:
-                                  allNotes(index,myNote.allNotesData[index]![0],myNote.allNotesData[index]![1])),
-                            );
-                          },
-                          itemCount: myNote.allNotesData.length,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                        ),
-                         ),
+                      child: allNotes2()
                     ),
                   ],
                 ),
@@ -200,19 +229,32 @@ class _HomepageState extends State<Homepage> {
           textAlign: TextAlign.left,
         ),
       ),
-floatingActionButton: FloatingActionButton(
-  onPressed: (){
+floatingActionButton: FloatingActionButton (
+  onPressed: () async{
     myNote.createNoteId();
-    len = myNote.allNotesData.length + 1;
-    myNote.allNotesData.length = len;
-    myNote.allNotesData[len - 1] = [
-      '','','False'
-    ];
-    myNote.noteclear();
-   Navigator.push(context,
+    Map<String , dynamic> noteInfoMap={
+      "Subject" : '',
+      "NoteText" : '',
+      "id" : myNote.id,
+      "IsImportant" : 'false'
+    };
+    await DatabaseMethods().addnoteDetails(noteInfoMap, myNote.id).then((value) {
+      Fluttertoast.showToast(
+          msg: "New Note is created",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0
+      );
+    });
+    myNote.getTextSubject('');
+    myNote.getNoteText('');
+    Navigator.push(context,
        MaterialPageRoute(builder:
-           (context) => NotePage(len - 1))
-   );
+           (context) => NotePage(myNote.id,myNote.subject, myNote.text))
+    );
   },
   backgroundColor: Colors.blue,
   shape: CircleBorder(),
@@ -278,7 +320,7 @@ floatingActionButton: FloatingActionButton(
       ),
     );
   }
-  Widget allNotes(index, sub , text2){
+  Widget allNotes(sub , text2,id){
     return Container(
       width: 200,
       height: 200,
@@ -312,8 +354,24 @@ floatingActionButton: FloatingActionButton(
                       ),
                     ),
                   ),
-                  Icon(Icons.star,
-                    color: darkColors[1],)
+                  Container(
+                    width: 60,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Icon(Icons.star,
+                          color: active_icon_Color,),
+                        InkWell(
+                          onTap: ()async{
+                            await DatabaseMethods().DeleteNoteDetails(id);
+
+                          },
+                          child: Icon(Icons.delete,
+                          color: active_icon_Color,),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -377,6 +435,7 @@ floatingActionButton: FloatingActionButton(
       active_allNotes_Color = lightColors[2];
       active_appbar_Color = lightColors[3];
       active_appbg_Color = lightColors[4];
+      active_icon_Color = darkColors[4];
     }else{
       isDarkmode = true;
       active_Align = Alignment.centerLeft;
@@ -385,9 +444,35 @@ floatingActionButton: FloatingActionButton(
       active_allNotes_Color = darkColors[2];
       active_appbar_Color = darkColors[3];
       active_appbg_Color = darkColors[4];
+      active_icon_Color = lightColors[4];
     }
 
   }
+
+ // Future editNote
+
+  // GridView.builder(
+  // itemBuilder: (context, index) {
+  // return Padding(
+  // padding: const EdgeInsets.all(20.0),
+  // child: InkWell(
+  // onTap: (){
+  // myNote.getTextSubject(myNote.allNotesData[index]![0]);
+  // myNote.getNoteText(myNote.allNotesData[index]![1]);
+  // Navigator.push(context,
+  // MaterialPageRoute(builder:
+  // (context) => NotePage(index))
+  // );
+  // },
+  // child:
+  // allNotes(index,myNote.allNotesData[index]![0],myNote.allNotesData[index]![1])),
+  // );
+  // },
+  // itemCount: myNote.allNotesData.length,
+  // gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+  // crossAxisCount: 2,
+  // ),
+  // ),
 }
 
 

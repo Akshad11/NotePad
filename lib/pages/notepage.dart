@@ -1,20 +1,29 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:noteapp/pages/components/datamodel.dart';
+import 'package:noteapp/pages/notestore.dart';
 import 'package:provider/provider.dart';
 
 class NotePage extends StatefulWidget {
-  var len;
+  var len, sub, note;
 
-  NotePage(this.len);
+  NotePage(
+      this.len,
+      this.sub,
+      this.note
+      );
   @override
-  State<NotePage> createState() => _NotePageState(len);
+  State<NotePage> createState() => _NotePageState(len, sub, note);
 }
 
 class _NotePageState extends State<NotePage> {
-  var len;
+  var len, sub, note;
 
-  _NotePageState(this.len);
+  _NotePageState(
+      this.len,
+      this.sub,
+      this.note);
 
   var subjectText = TextEditingController();
   var noteText = TextEditingController();
@@ -113,7 +122,7 @@ class _NotePageState extends State<NotePage> {
                             fontSize: 40,
                             color: textColor,
                           ),
-                          controller: subjectText..text = myNote.subject ,
+                          controller: subjectText..text = sub ,
                           decoration: InputDecoration(
                               border: InputBorder.none,
                               hintText: 'Heading',
@@ -131,7 +140,7 @@ class _NotePageState extends State<NotePage> {
                     child: Padding(
                       padding: const EdgeInsets.only(left: 20.0),
                       child: TextField(
-                        controller: noteText..text = myNote.text,
+                        controller: noteText..text = note,
                           style: TextStyle(
                             fontSize: 30,
                             color: textColor,
@@ -155,17 +164,33 @@ class _NotePageState extends State<NotePage> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: (){
-          myNote.createcurrDate();
+        onPressed: () async{
+         // myNote.createcurrDate();
           myNote.getNoteText(noteText.text);
           myNote.getTextSubject(subjectText.text);
 
-          myNote.allNotesData[len] = [
-            myNote.subject,myNote.text, myNote.isImportant.toString()
-          ];
-          setState(() {
-
+          Map<String , dynamic> updateNoteinfo={
+            "Subject" : myNote.subject,
+            "NoteText" : myNote.text,
+            "id" : len,
+            "IsImportant" : myNote.isImportant.toString()
+          };
+          await DatabaseMethods().updateNoteDetails(len, updateNoteinfo).then((value) {
+            Fluttertoast.showToast(
+                msg: "Note is Saved",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.CENTER,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.white,
+                textColor: Colors.black,
+                fontSize: 16.0
+            );
           });
+          noteText.text = myNote.text;
+          subjectText.text = myNote.subject;
+          // setState(() {
+          //
+          // });
         },
         backgroundColor: Colors.blue,
         child: Icon(
